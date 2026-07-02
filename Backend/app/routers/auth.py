@@ -6,7 +6,11 @@ from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse
 router = APIRouter(prefix="/api/auth", tags=["Auth"])
 
 
-@router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/register",
+    response_model=TokenResponse,
+    status_code=status.HTTP_201_CREATED
+)
 async def register(payload: RegisterRequest):
     return await auth_controller.register(payload)
 
