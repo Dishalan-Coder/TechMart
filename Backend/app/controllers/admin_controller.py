@@ -71,4 +71,47 @@ async def get_dashboard_stats():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/users", response_model=UsersListResponse, status_code=status.HTTP_200_OK)
+async def get_all_users(
+    page: int = Query(1, ge=1), 
+    limit: int = Query(10, ge=1, le=100), 
+    keyword: Optional[str] = None
+):
+    """
+    GET /api/admin/users (admin only)
+    """
+    try:
+        skip = (page - 1) * limit
+
+        
+        filter_query = {"role": "user"}
+        
+        if keyword:
+           
+            regex_query = {"$regex": keyword, "$options": "i"}
+            filter_query["$or"] = [
+                {"name": regex_query},
+                {"email": regex_query}
+            ]
+
+        import asyncio
+        
+        
+        users_task = User.find(filter_query).sort("-createdAt").skip(skip).limit(limit).to_list()
+        total_task = User.find(filter_query).count()
+
+        users, total = await asyncio.gather(users_task, total_task)
+        
+        total_pages = max(1, (total + limit - 1) // limit) 
+
+        return {
+            "success": True,
+            "total": total,
+            "page": page,
+            "totalPages": total_pages,
+            "users": users
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
