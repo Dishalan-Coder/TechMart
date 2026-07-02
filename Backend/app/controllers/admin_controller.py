@@ -115,3 +115,33 @@ async def get_all_users(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.put("/users/{user_id}/ban", status_code=status.HTTP_200_OK)
+async def toggle_ban_user(user_id: str):
+    """
+    PUT /api/admin/users/:id/ban (admin only)
+    """
+    try:
+        
+        if not ObjectId.is_valid(user_id):
+            raise HTTPException(status_code=400, detail="Invalid User ID format")
+
+        user = await User.get(user_id)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+            
+        if user.role == "admin":
+            raise HTTPException(status_code=400, detail="Cannot ban an admin account")
+
+       
+        user.isBanned = not user.isBanned
+        await user.save()
+
+        return {
+            "success": True,
+            "message": "User has been banned" if user.isBanned else "User has been unbanned",
+            "user": user
+        }
+    except HTTPException as http_ex:
+        raise http_ex
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
