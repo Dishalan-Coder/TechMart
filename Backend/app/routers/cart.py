@@ -1,114 +1,34 @@
-from fastapi import APIRouter, Header, HTTPException
-from bson import ObjectId
+from fastapi import APIRouter, Depends
 
-from app.database import cart_collection
-from app.auth import verify_token
+from app.controllers import cart_controller
+from app.dependencies import get_current_user
+from app.schemas.cart import CartItemRequest, CartResponse, UpdateCartItemRequest
 
-router = APIRouter(prefix="/cart", tags=["Cart"])
-
-
-
-def get_user(authorization: str):
-    if not authorization:
-        raise HTTPException(status_code=401, detail="Token missing")
-
-    token = authorization.replace("Bearer ", "")
-    user = verify_token(token)
-
-    if not user:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-    return user
+router = APIRouter(prefix="/api/cart", tags=["Cart"])
 
 
-
-@router.post("/add")
-async def add_to_cart(item: dict, authorization: str = Header(None)):
-
-    user = get_user(authorization)
-    user_id = user["user_id"]
-
-    existing = await cart_collection.find_one({
-        "user_id": user_id,
-        "product_id": item["product_id"]
-    })
-
-    if existing:
-        await cart_collection.update_one(
-            {"_id": existing["_id"]},
-            {"$inc": {"quantity": item.get("quantity", 1)}}
-        )
-        return {"message": "Cart updated"}
-
-    await cart_collection.insert_one({
-        "user_id": user_id,
-        "product_id": item["product_id"],
-        "quantity": item.get("quantity", 1)
-    })
-
-    return {"message": "Added to cart"}
+@router.get("", response_model=CartResponse)
+async def get_cart(current_user: dict = Depends(get_current_user)):
+    return await cart_controller.get_cart(str(current_user["_id"]))
 
 
-
-@router.get("/")
-async def get_cart(authorization: str = Header(None)):
-
-    user = get_user(authorization)
-    user_id = user["user_id"]
-
-    cart_items = await cart_collection.find(
-        {"user_id": user_id}
-    ).to_list(100)
-
-    for item in cart_items:
-        item["_id"] = str(item["_id"])
-
-    return cart_items
+@router.post("", response_model=CartResponse)
+async def add_to_cart(payload: CartItemRequest, current_user: dict = Depends(get_current_user)):
+    return await cart_controller.add_to_cart(str(current_user["_id"]), payload)
 
 
-
-@router.delete("/{cart_id}")
-async def delete_item(cart_id: str, authorization: str = Header(None)):
-
-    user = get_user(authorization)
-    user_id = user["user_id"]
-
-    result = await cart_collection.delete_one({
-        "_id": ObjectId(cart_id),
-        "user_id": user_id
-    })
-
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Item not found")
-
-    return {"message": "Deleted"}
-
-
-
-@router.put("/{cart_id}")
-async def update_quantity(
-    cart_id: str,
-    data: dict,
-    authorization: str = Header(None)
+@router.put("/{product_id}", response_model=CartResponse)
+async def update_cart_item(
+    product_id: str, payload: UpdateCartItemRequest, current_user: dict = Depends(get_current_user)
 ):
-
-    user = get_user(authorization)
-    user_id = user["user_id"]
-
-    result = await cart_collection.update_one(
-        {
-            "_id": ObjectId(cart_id),
-            "user_id": user_id
-        },
-        {
-            "$set": {"quantity": data["quantity"]}
-        }
-    )
-
-    if result.modified_count == 0:
-        raise HTTPException(status_code=404, detail="Update failed")
-
-    return {"message": "Quantity updated"}
+    return await cart_controller.update_cart_item(str(current_user["_id"]), product_id, payload.quantity)
 
 
-    
+@router.delete("/{product_id}", response_model=CartResponse)
+async def remove_from_cart(product_id: str, current_user: dict = Depends(get_current_user)):
+    return await cart_controller.remove_from_cart(str(current_user["_id"]), product_id)
+
+
+@router.delete("", response_model=CartResponse)
+async def clear_cart(current_user: dict = Depends(get_current_user)):
+    return await cart_controller.clear_cart(str(current_user["_id"]))
