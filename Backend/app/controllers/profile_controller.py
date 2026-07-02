@@ -1,25 +1,10 @@
-from ..database import users_collection
-from fastapi import HTTPException
+from app.schemas.user import ChangePasswordRequest, UpdateProfileRequest
+from app.services import user_service
 
 
-async def get_profile(user_id: str):
-    user = await users_collection.find_one({"_id": user_id})
-
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    user["_id"] = str(user["_id"])
-    return user
+async def update_profile(user: dict, payload: UpdateProfileRequest) -> dict:
+    return await user_service.update_profile(user, payload)
 
 
-
-async def update_profile(user_id: str, data: dict):
-    result = await users_collection.update_one(
-        {"_id": user_id},
-        {"$set": data}
-    )
-
-    if result.modified_count == 0:
-        raise HTTPException(status_code=400, detail="Update failed")
-
-    return {"message": "Profile updated successfully"}
+async def change_password(user: dict, payload: ChangePasswordRequest) -> None:
+    await user_service.change_password(user, payload)
