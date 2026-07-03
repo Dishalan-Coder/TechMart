@@ -25,3 +25,14 @@ async def init_indexes():
     logger.info("Database indexes created successfully!")
 
 
+@flow(name="Database Initialization Flow")
+async def db_setup_flow():
+    """Main flow to handle database setup tasks."""
+   
+    await init_indexes()
+
+
+if __name__ == "__main__":
+    import asyncio
+   
+    asyncio.run(db_setup_flow())
