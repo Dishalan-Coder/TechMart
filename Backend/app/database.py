@@ -11,3 +11,17 @@ products_collection = database["products"]
 carts_collection = database["carts"]
 
 
+@task(name="Create MongoDB Indexes", description="Ensures required indexes exist in the database.")
+async def init_indexes():
+    
+    logger = get_run_logger()
+    logger.info("Starting database index creation...")
+    
+    await users_collection.create_index("email", unique=True)
+    await products_collection.create_index("name")
+    await products_collection.create_index("category")
+    await carts_collection.create_index("user_id", unique=True)
+    
+    logger.info("Database indexes created successfully!")
+
+
