@@ -197,3 +197,15 @@
   color: var(--danger);
   border-color: var(--danger);
 }
+
+.profile-page .btn-ghost, 
+.cart-page .btn-ghost, 
+.admin-page .btn-ghost {
+  color: var(--ink);
+  border-color: #D7DCE3;
+}
+
+.admin-page .btn-ghost.danger {
+  color: var(--danger);
+  border-color: var(--danger);
+}
