@@ -478,3 +478,40 @@
   font-size: 16px;
   color: var(--ink);
 }
+
+.products-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.products-header h1 {
+  font-family: var(--font-display);
+  font-size: 30px;
+  margin-bottom: 4px;
+}
+
+.products-header p {
+  color: var(--slate-600);
+  margin: 0 0 24px;
+}
+
+.products-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.products-toolbar input, 
+.products-toolbar select {
+  padding: 10px 14px;
+  border: 1px solid #D7DCE3;
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+
+.products-toolbar input {
+  flex: 1;
+  min-width: 200px;
+}
