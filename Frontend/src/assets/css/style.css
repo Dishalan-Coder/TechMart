@@ -44,3 +44,33 @@
   justify-content: space-between;
   gap: 24px;
 }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+}
+
+.brand-mark {
+  font-size: 22px;
+  color: var(--amber);
+}
+
+.brand-mark.large {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.brand-name {
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.brand-name em {
+  font-style: normal;
+  color: var(--amber);
+  margin-left: 2px;
+}
