@@ -41,11 +41,7 @@ export default function Home() {
             <Link to="/register" className="btn-ghost light">Create an account</Link>
           </div>
         </div>
-        <div className="hero-graphic" aria-hidden="true">
-          <div className="volt-ring">
-            <span>⚡</span>
-          </div>
-        </div>
+        
       </section>
 
       <section className="section">
