@@ -598,3 +598,21 @@
   color: var(--slate-400);
   margin-top: 10px;
 }
+
+.alert-error {
+  background: #FDECEA;
+  color: #B4231A;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  margin-bottom: 16px;
+}
+
+.alert-info {
+  background: #E9F7EF;
+  color: #146C43;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  margin-bottom: 16px;
+}
