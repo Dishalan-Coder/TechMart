@@ -1011,3 +1011,34 @@ th {
   color: var(--slate-600);
   margin-bottom: 20px;
 }
+
+.footer {
+  background: var(--navy-950);
+  color: var(--slate-400);
+  padding: 40px 24px;
+  margin-top: 60px;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #fff;
+  font-weight: 700;
+  font-family: var(--font-display);
+  margin-bottom: 10px;
+}
+
+.footer-copy {
+  font-size: 12px;
+  margin-top: 10px;
+  opacity: 0.7;
+}
+
