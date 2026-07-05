@@ -1,0 +1,18 @@
+:root {
+  --navy-950: #0B1220;
+  --navy-900: #101828;
+  --navy-800: #16223B;
+  --navy-700: #1F2E4D;
+  --amber: #F5B800;
+  --amber-dark: #D99E00;
+  --slate-50: #F7F8FA;
+  --slate-100: #EEF1F5;
+  --slate-400: #8993A4;
+  --slate-600: #4C5567;
+  --ink: #14181F;
+  --danger: #E2483D;
+  --success: #1E9E6B;
+  --radius: 10px;
+  --font-display: 'Space Grotesk', 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
